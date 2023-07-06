@@ -1,8 +1,9 @@
-
 """
 2.2 Create a function to count the number of identical characters in a string, returning
 the value of the highest count and the letter
 """
+
+import unittest
 
 
 def ident_char_counter(string: str):
@@ -15,48 +16,123 @@ def ident_char_counter(string: str):
         Returns:
             tuple: A tuple containing the highest count and the corresponding letter.
     """
-    if type(string) is str:
-        string = string.lower()
-
-        char_dict = {}
-        highest_count = 0
-        highest_symbol = None
-
-        for symbol in string:
-            if symbol in char_dict:
-                char_dict[symbol] += 1
-            else:
-                char_dict[symbol] = 1
-
-            if char_dict[symbol] > highest_count:
-                highest_count = char_dict[symbol]
-                highest_symbol = symbol
-        return highest_count, highest_symbol
-    else:
+    if not isinstance(string, str):
         raise TypeError("Not a string, please pass data with type 'str'")
 
+    string = string.lower()
 
-# Test case 1
-string1 = "hello"
-result1 = ident_char_counter(string1)
-print(result1)  # Output: (2, 'l')
+    char_dict = {}
+    highest_count = 0
+    highest_symbol = None
 
-# Test case 2
-string2 = "Mississippi"
-result2 = ident_char_counter(string2)
-print(result2)  # Output: (4, 's')
+    for symbol in string:
+        if symbol in char_dict:
+            char_dict[symbol] += 1
+        else:
+            char_dict[symbol] = 1
 
-# Test case 3
-string3 = "aabbbccc"
-result3 = ident_char_counter(string3)
-print(result3)  # Output: (3, 'b')
+        if char_dict[symbol] > highest_count:
+            highest_count = char_dict[symbol]
+            highest_symbol = symbol
 
-# Test case 4 (empty string)
-string4 = ""
-result4 = ident_char_counter(string4)
-print(result4)  # Output: (0, None)
+    return highest_count, highest_symbol
 
-# Test case 5 (non-string input)
-string5 = 12345
-result5 = ident_char_counter(string5)
-# Output: TypeError: Not a string, please pass data with type 'str'
+
+def ident_char_counter_with_collection_func(string: str):
+    """
+    Counts the number of identical characters in a string and returns the value of the highest count and the letter.
+
+    Args:
+        string (str): The input string.
+
+    Returns:
+        tuple: A tuple containing the highest count and the corresponding letter.
+    """
+    if not isinstance(string, str):
+        raise TypeError("Not a string, please pass data with type 'str'")
+
+    string = string.lower()
+
+    char_dict = {}
+    for symbol in string:
+        if symbol not in char_dict:
+            char_dict[symbol] = string.count(symbol)
+
+    max_count_letter = max(char_dict, key=lambda key: char_dict[key])
+    return char_dict[max_count_letter], max_count_letter
+
+
+class IdentCharCounterTestCase(unittest.TestCase):
+    def test_ident_char_counter_valid_string(self):
+        string = "hello"
+        expected_result = (2, 'l')
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_valid_string_with_repeated_characters(self):
+        string = "Mississippi"
+        expected_result = (4, 's')
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_valid_string_with_same_characters(self):
+        string = "aabbbccc"
+        expected_result = (3, 'b')
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_empty_string(self):
+        string = ""
+        expected_result = (0, None)
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_invalid_input(self):
+        invalid_input = 12345
+
+        with self.assertRaises(TypeError):
+            ident_char_counter(invalid_input)
+
+
+class IdentCharCounterWithCollectionFuncTestCase(unittest.TestCase):
+    def test_ident_char_counter_with_collection_func_valid_string(self):
+        string = "hello"
+        expected_result = (2, 'l')
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_with_collection_func_valid_string_with_repeated_characters(self):
+        string = "Mississippi"
+        expected_result = (4, 's')
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_with_collection_func_valid_string_with_same_characters(self):
+        string = "aabbbccc"
+        expected_result = (3, 'b')
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_with_collection_func_empty_string(self):
+        string = ""
+        expected_result = (0, None)
+
+        result = ident_char_counter(string)
+        self.assertEqual(result, expected_result)
+
+    def test_ident_char_counter_with_collection_func_invalid_input(self):
+        invalid_input = 12345
+
+        with self.assertRaises(TypeError):
+            ident_char_counter(invalid_input)
+
+
+if __name__ == '__main__':
+    unittest.main()

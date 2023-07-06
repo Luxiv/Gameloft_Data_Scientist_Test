@@ -1,4 +1,3 @@
-
 """
 3.1 You are given a DataFrame that contains information about which items users have
 bought in our games. The DataFrame has the following structure:
@@ -21,11 +20,14 @@ username  game
           minions     7.99
 """
 
-
 import pandas as pd
 
+USERNAME_COLUMN = 'username'
+GAME_COLUMN = 'game'
+CASH_COLUMN = 'cash'
 
-def process_dataframe(df):
+
+def process_dataframe(df: pd.DataFrame):
     """
     Takes a DataFrame and returns a new DataFrame with grouped and summed cash values.
 
@@ -35,22 +37,21 @@ def process_dataframe(df):
     Returns:
         pd.DataFrame: A new DataFrame with the cash values grouped by 'username' and 'game'.
     """
-    # Grouping the DataFrame by 'username' and 'game', and then summing the 'cash' values
-    grouped_df = df.groupby(['username', 'game'])['cash'].sum()
+
+    grouped_df = df.groupby([USERNAME_COLUMN, GAME_COLUMN])[CASH_COLUMN].sum()
 
     return grouped_df
 
 
-# Sample DataFrame
-data = {
-    'cash': [10.99, 7.99, 10.99, 7.99, 3.99],
-    'game': ['asp8', 'minions', 'asp8', 'minions', 'asp8'],
-    'item_id': [14, 3, 14, 14, 7],
-    'username': [125335, 125335, 4334123, 4334123, 125335]
-}
+if __name__ == "__main__":
+    data = {
+        CASH_COLUMN: [10.99, 7.99, 10.99, 7.99, 3.99],
+        GAME_COLUMN: ['asp8', 'minions', 'asp8', 'minions', 'asp8'],
+        'item_id': [14, 3, 14, 14, 7],
+        USERNAME_COLUMN: [125335, 125335, 4334123, 4334123, 125335]
+    }
 
-df = pd.DataFrame(data)
+    df = pd.DataFrame(data)
 
-# Calling the function and printing the result
-result = process_dataframe(df)
-print(result)
+    result = process_dataframe(df)
+    print(result)

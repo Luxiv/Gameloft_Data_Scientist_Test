@@ -35,8 +35,11 @@ user3 1      6.99    6.99      33.35
 
 import pandas as pd
 
+CASH_COLUMN = 'Cash'
+USER_COLUMN = 'User'
 
-def calculate_cumulative_spending(df):
+
+def calculate_cumulative_spending(df: pd.DataFrame):
     """
     Calculate the cumulative spending and percentage of total spending for each user.
 
@@ -48,33 +51,27 @@ def calculate_cumulative_spending(df):
             (percentage of total spending).
     """
 
-    # Sort the DataFrame by User and Day
-    df.sort_values(by=['User', 'Day'], inplace=True)
+    df.sort_values(by=[USER_COLUMN, 'Day'], inplace=True)
 
-    # Calculate the cumulative sum and percentage
-    df['CumSum'] = df.groupby('User')['Cash'].cumsum()
-    df['Percentage_cs'] = (df['CumSum'] / df.groupby(['User'])['Cash'].transform('sum')) * 100
+    df['CumSum'] = df.groupby(USER_COLUMN)[CASH_COLUMN].cumsum()
+    df['Percentage_cs'] = (df['CumSum'] / df.groupby([USER_COLUMN])[CASH_COLUMN].transform('sum')) * 100
 
-    # Round the Percentage_cs column to two decimal places
     df['Percentage_cs'] = df['Percentage_cs'].round(2)
 
-    # Set the multi-level index
-    df.set_index(['User', 'Day'], inplace=True)
+    df.set_index([USER_COLUMN, 'Day'], inplace=True)
 
     return df
 
 
-# Example DataFrame
-data = {
-    'User': ['user1', 'user1', 'user1', 'user1', 'user2', 'user2', 'user2', 'user2', 'user3', 'user3', 'user3',
-             'user3'],
-    'Day': [1, 4, 0, 5, 2, 3, 4, 3, 5, 2, 1, 3],
-    'Cash': [6.99, 3.99, 7.99, 0.99, 2.99, 8.99, 2.99, 7.99, 1.99, 5.99, 6.99, 5.99]
-}
+if __name__ == "__main__":
+    data = {
+        USER_COLUMN: ['user1', 'user1', 'user1', 'user1', 'user2', 'user2', 'user2', 'user2', 'user3', 'user3', 'user3',
+                      'user3'],
+        'Day': [1, 4, 0, 5, 2, 3, 4, 3, 5, 2, 1, 3],
+        CASH_COLUMN: [6.99, 3.99, 7.99, 0.99, 2.99, 8.99, 2.99, 7.99, 1.99, 5.99, 6.99, 5.99]
+    }
 
-df = pd.DataFrame(data)
+    df = pd.DataFrame(data)
 
-
-# Calling the function and printing the result
-res = calculate_cumulative_spending(df)
-print(res)
+    res = calculate_cumulative_spending(df)
+    print(res)

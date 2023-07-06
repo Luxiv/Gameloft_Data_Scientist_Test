@@ -46,25 +46,23 @@ Days_Since_Install
 import pandas as pd
 
 
-def reshape_data(User_Time_Info, User_Currency_Info):
+def reshape_data(user_time_info: pd.DataFrame, user_currency_info: pd.DataFrame):
     """
     Join two DataFrames and reshape the data based on days since install.
 
     Args:
-        User_Time_Info (DataFrame): DataFrame containing user time information.
-        User_Currency_Info (DataFrame): DataFrame containing user currency information.
+        user_time_info (DataFrame): DataFrame containing user time information.
+        user_currency_info (DataFrame): DataFrame containing user currency information.
 
     Returns:
         DataFrame: Reshaped DataFrame with days since install as the index, users as columns, and currency balance as values.
     """
 
-    User_Time_Info['Install_Date'] = pd.to_datetime(User_Time_Info['Install_Date'])
-    User_Currency_Info['Session_Date'] = pd.to_datetime(User_Currency_Info['Session_Date'])
+    user_time_info['Install_Date'] = pd.to_datetime(user_time_info['Install_Date'])
+    user_currency_info['Session_Date'] = pd.to_datetime(user_currency_info['Session_Date'])
 
-    # Join the two DataFrames based on the 'Users' column
-    joined_df = User_Currency_Info.merge(User_Time_Info, on='Users')
+    joined_df = user_currency_info.merge(user_time_info, on='Users')
 
-    # Calculate the days since install
     joined_df['Days_Since_Install'] = (joined_df['Session_Date'] - joined_df['Install_Date']).dt.days
 
     reshaped_df = joined_df.pivot_table(index='Days_Since_Install', columns='Users', values='Currency_Balance',
@@ -73,24 +71,23 @@ def reshape_data(User_Time_Info, User_Currency_Info):
     return reshaped_df
 
 
-# Example DataFrame
+if __name__ == "__main__":
 
-user_time_info = {
-    'Users': ['User_0', 'User_1', 'User_2', 'User_3', 'User_4', 'User_5'],
-    'Install_Date': ['2018-06-08', '2018-06-05', '2018-06-04', '2018-06-08', '2018-06-01', '2018-06-02'],
-    'Time_Played': [59, 89, 56, 78, 80, 60]
-}
+    user_time_info = {
+        'Users': ['User_0', 'User_1', 'User_2', 'User_3', 'User_4', 'User_5'],
+        'Install_Date': ['2018-06-08', '2018-06-05', '2018-06-04', '2018-06-08', '2018-06-01', '2018-06-02'],
+        'Time_Played': [59, 89, 56, 78, 80, 60]
+    }
 
-user_currency_info = {
-    'Users': ['User_1', 'User_3', 'User_5', 'User_5', 'User_3', 'User_5', 'User_1', 'User_0', 'User_1', 'User_6'],
-    'Session_Date': ['2018-06-06', '2018-06-09', '2018-06-05', '2018-06-03', '2018-06-11', '2018-06-05', '2018-06-07',
-                     '2018-06-12', '2018-06-09', '2018-06-29'],
-    'Currency_Balance': [396, 235, 316, 418, 330, 558, 354, 357, 200, 234]
-}
+    user_currency_info = {
+        'Users': ['User_1', 'User_3', 'User_5', 'User_5', 'User_3', 'User_5', 'User_1', 'User_0', 'User_1', 'User_6'],
+        'Session_Date': ['2018-06-06', '2018-06-09', '2018-06-05', '2018-06-03', '2018-06-11', '2018-06-05', '2018-06-07',
+                         '2018-06-12', '2018-06-09', '2018-06-29'],
+        'Currency_Balance': [396, 235, 316, 418, 330, 558, 354, 357, 200, 234]
+    }
 
-user_time_df = pd.DataFrame(user_time_info)
-user_currency_df = pd.DataFrame(user_currency_info)
+    user_time_df = pd.DataFrame(user_time_info)
+    user_currency_df = pd.DataFrame(user_currency_info)
 
-# Calling the function and printing the result
-result = reshape_data(user_time_df, user_currency_df)
-print(result)
+    result = reshape_data(user_time_df, user_currency_df)
+    print(result)
