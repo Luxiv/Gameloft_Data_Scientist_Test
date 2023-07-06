@@ -6,8 +6,8 @@ Explain your answer.
 
 SELECT PlayerName, Trophies
 FROM Players
-ORDER BY Trophies DESC LIMIT 1
-OFFSET 14;
+ORDER BY Trophies DESC
+LIMIT 1 OFFSET 14;
 
 /*
  Explanation:
@@ -24,7 +24,8 @@ GAME, COUNTRY, DEVICE, TOTAL_AMOUNT_SPENT.
 
 SELECT *
 FROM Gamers
-ORDER BY INSTALL_DATE DESC LIMIT 3;
+ORDER BY INSTALL_DATE DESC
+LIMIT 3;
 /*
  This query will retrieve the last 3 records based on the descending order of the INSTALL_DATE field.
  */
@@ -35,7 +36,8 @@ ORDER BY INSTALL_DATE DESC LIMIT 3;
 SELECT COUNTRY, SUM(TOTAL_AMOUNT_SPENT) AS TotalSpent
 FROM Gamers
 GROUP BY COUNTRY
-ORDER BY TotalSpent DESC LIMIT 3;
+ORDER BY TotalSpent DESC
+LIMIT 3;
 /*
  To return the top 3 spenders by country from the Gamers table,
  you can use the GROUP BY and ORDER BY clauses along with the LIMIT keyword

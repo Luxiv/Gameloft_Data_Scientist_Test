@@ -12,6 +12,7 @@ should also be able to return:
 ● The list of games,
 ● A list of games that have their game_name starting with the letter given by the user.
 """
+import unittest
 
 
 class Game:
@@ -108,25 +109,29 @@ class GameStore:
         return [game.name for game in self.games if game.name.startswith(letter)]
 
 
+class GameStoreTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.store = GameStore()
+        self.store.add_game("Asphalt 9: Legends", "Racing", 2018)
+        self.store.add_game("Modern Combat 5", "First-person shooter", 2014)
+        self.store.add_game("Gangstar Vegas", "Action", 2013)
+        self.store.add_game("Order & Chaos Online", "MMORPG", 2011)
+
+    def test_get_number_of_games(self):
+        self.assertEqual(self.store.get_number_of_games(), 4)
+
+    def test_get_list_of_games(self):
+        expected_game_list = ["Asphalt 9: Legends", "Modern Combat 5", "Gangstar Vegas", "Order & Chaos Online"]
+        self.assertEqual(self.store.get_list_of_games(), expected_game_list)
+
+    def test_get_games_starting_with(self):
+        self.assertEqual(self.store.get_games_starting_with("A"), ["Asphalt 9: Legends"])
+        self.assertEqual(self.store.get_games_starting_with("M"), ["Modern Combat 5"])
+        self.assertEqual(self.store.get_games_starting_with("O"), ["Order & Chaos Online"])
+        self.assertEqual(self.store.get_games_starting_with("G"), ["Gangstar Vegas"])
+        self.assertEqual(self.store.get_games_starting_with("X"), [])
+
+
 if __name__ == '__main__':
-    store = GameStore()
-
-    # Adding games to the store
-    store.add_game("Asphalt 9: Legends", "Racing", 2018)
-    store.add_game("Modern Combat 5", "First-person shooter", 2014)
-    store.add_game("Gangstar Vegas", "Action", 2013)
-    store.add_game("Order & Chaos Online", "MMORPG", 2011)
-
-    # Getting the number of games
-    num_of_games = store.get_number_of_games()
-    print("Number of games:", num_of_games)
-
-    # Getting the list of games
-    game_list = store.get_list_of_games()
-    print("List of games:", game_list)
-
-    # Getting games starting with a specific letter
-    starting_letters = ["A", "M", "O"]
-    for starting_letter in starting_letters:
-        games_starting_with_letter = store.get_games_starting_with(starting_letter)
-        print(f"Games starting with letter '{starting_letter}':", games_starting_with_letter)
+    unittest.main()

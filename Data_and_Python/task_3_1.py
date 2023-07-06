@@ -22,6 +22,7 @@ username  game
 
 import pandas as pd
 
+
 USERNAME_COLUMN = 'username'
 GAME_COLUMN = 'game'
 CASH_COLUMN = 'cash'
@@ -38,8 +39,8 @@ def process_dataframe(df: pd.DataFrame):
         pd.DataFrame: A new DataFrame with the cash values grouped by 'username' and 'game'.
     """
 
-    grouped_df = df.groupby([USERNAME_COLUMN, GAME_COLUMN])[CASH_COLUMN].sum()
-
+    grouped_df = df.groupby([USERNAME_COLUMN, GAME_COLUMN])[CASH_COLUMN].sum().reset_index()
+    grouped_df.set_index([USERNAME_COLUMN, GAME_COLUMN], inplace=True)
     return grouped_df
 
 

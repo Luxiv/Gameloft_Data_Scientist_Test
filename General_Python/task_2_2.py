@@ -4,6 +4,7 @@ the value of the highest count and the letter
 """
 
 import unittest
+from collections import Counter
 
 
 def ident_char_counter(string: str):
@@ -53,85 +54,47 @@ def ident_char_counter_with_collection_func(string: str):
 
     string = string.lower()
 
-    char_dict = {}
-    for symbol in string:
-        if symbol not in char_dict:
-            char_dict[symbol] = string.count(symbol)
-
-    max_count_letter = max(char_dict, key=lambda key: char_dict[key])
-    return char_dict[max_count_letter], max_count_letter
+    char_counts = Counter(string)
+    max_count_letter = max(char_counts, key=char_counts.get)
+    return char_counts[max_count_letter], max_count_letter
 
 
 class IdentCharCounterTestCase(unittest.TestCase):
-    def test_ident_char_counter_valid_string(self):
-        string = "hello"
-        expected_result = (2, 'l')
+    def test_ident_char_counter(self):
+        test_cases = [
+            ("hello", (2, 'l')),
+            ("Mississippi", (4, 's')),
+            ("aabbbccc", (3, 'b')),
+            ("", (0, None)),
+            (12345, TypeError),
+        ]
 
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_valid_string_with_repeated_characters(self):
-        string = "Mississippi"
-        expected_result = (4, 's')
-
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_valid_string_with_same_characters(self):
-        string = "aabbbccc"
-        expected_result = (3, 'b')
-
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_empty_string(self):
-        string = ""
-        expected_result = (0, None)
-
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_invalid_input(self):
-        invalid_input = 12345
-
-        with self.assertRaises(TypeError):
-            ident_char_counter(invalid_input)
+        for string, expected_result in test_cases:
+            if expected_result == TypeError:
+                with self.assertRaises(TypeError):
+                    ident_char_counter(string)
+            else:
+                result = ident_char_counter(string)
+                self.assertEqual(result, expected_result)
 
 
 class IdentCharCounterWithCollectionFuncTestCase(unittest.TestCase):
-    def test_ident_char_counter_with_collection_func_valid_string(self):
-        string = "hello"
-        expected_result = (2, 'l')
+    def test_ident_char_counter_with_collection_func(self):
+        test_cases = [
+            ("hello", (2, 'l')),
+            ("Mississippi", (4, 's')),
+            ("aabbbccc", (3, 'b')),
+            ("", (0, None)),
+            (12345, TypeError),
+        ]
 
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_with_collection_func_valid_string_with_repeated_characters(self):
-        string = "Mississippi"
-        expected_result = (4, 's')
-
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_with_collection_func_valid_string_with_same_characters(self):
-        string = "aabbbccc"
-        expected_result = (3, 'b')
-
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_with_collection_func_empty_string(self):
-        string = ""
-        expected_result = (0, None)
-
-        result = ident_char_counter(string)
-        self.assertEqual(result, expected_result)
-
-    def test_ident_char_counter_with_collection_func_invalid_input(self):
-        invalid_input = 12345
-
-        with self.assertRaises(TypeError):
-            ident_char_counter(invalid_input)
+        for string, expected_result in test_cases:
+            if expected_result == TypeError:
+                with self.assertRaises(TypeError):
+                    ident_char_counter(string)
+            else:
+                result = ident_char_counter(string)
+                self.assertEqual(result, expected_result)
 
 
 if __name__ == '__main__':
