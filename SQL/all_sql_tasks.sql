@@ -107,6 +107,7 @@ FROM Projects;
  (d) Write a query to retrieve the names of employees who are not assigned to any
 project.
  */
+
 SELECT employee_name
 FROM Employees
 LEFT JOIN Projects ON Employees.employee_id = Projects.employee_id
@@ -225,4 +226,71 @@ WHERE row_num <= 3;
  in descending order using the ROW_NUMBER() function and the ORDER BY clause. The outer query
  then selects the customer_id, order_date, and total_amount from the ranked_orders subquery,
  limiting the result to the top 3 orders (row_num <= 3) with the highest total_amount.
+ */
+
+
+
+/*
+ 1.5 You have access to a database with the following schema
+ Session
+- user_id: int
+- event_date: datetime
+- session_id: int
+- last_session_length (ms): int
+Match
+- user_id: int
+- event_date: datetime
+- session_id: int
+- match_won: bool
+- match_length (ms): int
+
+ Each row in the Session Table represents an event that is sent at the beginning of each
+session.
+Each row in the Match Table represents an event that is sent at the end of the match
+The number of active days is a number for the distinct days played per user
+Create a SQL Query that gives you the number of player per that played at least 1
+active day (100%), at least 2 active days etc.... and its proportion
+ */
+
+--At first, I approached task 1.5 using a fairly simple approach as:
+
+SELECT
+    COUNT(DISTINCT DATE(event_date)) AS ActiveDays,
+    COUNT(DISTINCT user_id) AS "Number of players",
+    CONCAT(ROUND(COUNT(DISTINCT user_id) * 100.0 / COUNT(DISTINCT user_id), 2), '%') AS "Part of players"
+FROM Session
+GROUP BY ActiveDays
+ORDER BY ActiveDays ASC;
+
+-- However, very quickly during the experiment I realized that my approach is not correct and it will not be so easy...
+
+-- Well, I decided to analyze the task more deeply and think more thoroughly about ways to solve it
+-- Here is the result:
+
+SELECT
+    ActiveDays,
+    COUNT(DISTINCT user_id) AS "Number of players",
+    CONCAT(ROUND(COUNT(DISTINCT user_id) * 100.0 / (SELECT COUNT(DISTINCT user_id) FROM Session), 2), '%') AS "Part of players"
+FROM (
+    SELECT
+        COUNT(DISTINCT DATE(event_date)) AS ActiveDays,
+        user_id
+    FROM Session
+    GROUP BY user_id
+) AS ActiveDaysCount
+GROUP BY ActiveDays
+ORDER BY ActiveDays ASC;
+
+/*
+ This SQL query effective returns the following table:
+ (Test data was taken from test dataset which you can chak at the following link,
+https://github.com/Luxiv/Gameloft_Data_Scientist_Test/blob/master/Data_and_Python/task_1_5.py
+ where you can also see my version of task 1.5 using the Pandas library)
+
+ | Active days            | Number of players  | Part of players |
+---------------------------------------------------------------------
+ |             1          | 4                | 66.67%            |
+---------------------------------------------------------------------
+ |             2          | 2                | 33.33%            |
+---------------------------------------------------------------------
  */
