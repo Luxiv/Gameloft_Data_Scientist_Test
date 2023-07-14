@@ -283,9 +283,9 @@ ORDER BY ActiveDays ASC;
 
 /*
  This SQL query effective returns the following table:
- (Test data was taken from test dataset which you can chak at the following link,
-https://github.com/Luxiv/Gameloft_Data_Scientist_Test/blob/master/Data_and_Python/task_1_5.py
- where you can also see my version of task 1.5 using the Pandas library)
+ (Test data was taken from test dataset which you can chak at the following link: */
+-- (https://github.com/Luxiv/Gameloft_Data_Scientist_Test/blob/master/Data_and_Python/task_1_5.py)
+-- where you can also see my version of task 1.5 using the Pandas library)
 
  | Active days            | Number of players  | Part of players |
 ---------------------------------------------------------------------
